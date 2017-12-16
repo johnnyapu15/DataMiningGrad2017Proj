@@ -24,17 +24,20 @@ def getClosePerOpen(code, cmpBase):
     tmpValueList = []
     KOSPIDataList = list(tmpKOSPIData)[1:]
     for idx, val in enumerate(KOSPIDataList):
-
-        tmpPer = ((float(val[4]) - float(val[1]))/float(val[1]))
-        if tmpPer > float(cmpBase):
-            tmp = []
-            tmpI = 0
-            if (idx - LM.N >= 0):
-                tmpI = idx - LM.N
-                for i in range(tmpI, idx + 1):
-                    tmp.append(KOSPIDataList[i])
-                tmpValueList.append(tmp)
-            else:
-                tmpI = 0
-            
+        try:
+            if val[1] != '':
+                tmpPer = ((float(val[4]) - float(val[1]))/float(val[1]))
+                if tmpPer > float(cmpBase):
+                    tmp = []
+                    tmpI = 0
+                    if (idx - LM.N >= 0):
+                        tmpI = idx - LM.N
+                        for i in range(tmpI, idx):
+                            if KOSPIDataList[i][1] == '':
+                                break
+                            tmp.append(KOSPIDataList[i])
+                        if len(tmp) == 14:
+                            tmpValueList.append(tmp)
+        except ValueError as e:
+            print(e)
     return tmpValueList

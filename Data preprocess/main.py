@@ -8,7 +8,7 @@ import listModule as LM
 from shingle import *
 import classifyAndSaveModule as CLA 
 UPVALUE = .10
-DOWNVALUE = -.3
+DOWNVALUE = -.03
 INTERVAL = 14
 
 LM.init()
@@ -17,33 +17,35 @@ LM.init()
 CLASSIFIEDFOLDER = '../data/classified/'
 
 
-downloaded = list(LM.csv.reader(open('../data/downloadedList.csv', 'r')))
+downloaded = list(LM.csv.reader(open('../data/dataList.txt', 'r')))
 
 LM.A = UPVALUE
 LM.N = INTERVAL
-
-for li in downloaded:
-    tmp = CLA.getClosePerOpen(li, LM.A)
+allWr = LM.csv.writer(open(CLASSIFIEDFOLDER + 'allValues_' + str(LM.A) + '_' + str(LM.N) + '.csv', 'w'))
+for idx, li in enumerate(downloaded):
+    tmp = CLA.getClosePerOpen(li[0], LM.A)
 
     tmpWr = LM.csv.writer(open(CLASSIFIEDFOLDER \
-     + 'up_' + str(LM.A) + '_' + str(LM.N) + li, 'w'))
+     + 'up_' + str(LM.A) + '_' + str(LM.N) + li[0], 'w'))
     for r1 in tmp:
         tmpWr.writerow(r1)
-
+        allWr.writerow(r1)
+    print('processing: ' + str(idx) + '/' + str(len(downloaded)))
 LM.A = DOWNVALUE
 LM.N = INTERVAL
-
-for li in downloaded:
-    tmp = CLA.getClosePerOpen(li, LM.A)
+allWr = LM.csv.writer(open(CLASSIFIEDFOLDER + 'allValues_' + str(LM.A) + '_' + str(LM.N) + '.csv', 'w'))
+for idx, li in enumerate(downloaded):
+    tmp = CLA.getClosePerOpen(li[0], LM.A)
 
     tmpWr = LM.csv.writer(open(CLASSIFIEDFOLDER \
-     + 'down_' + str(LM.A) + '_' + str(LM.N) + li, 'w'))
+     + 'down_' + str(LM.A) + '_' + str(LM.N) + li[0], 'w'))
     for r1 in tmp:
         tmpWr.writerow(r1)
+        allWr.writerow(r1)
+    print('processing: ' + str(idx) + '/' + str(len(downloaded)))
 
 
-
-#When read this thing
+#When read these things
 #for r0 in reader:
 #   for r1 in r0:
 #       print((r1).replace("'", '').replace('[','').replace(']','').replace(',','').split())
